@@ -436,7 +436,11 @@ The rat plague of the Seatower Inn turned out to be Betsy, the pet rat of the In
 //
 @793  = ~Missing Monk in the Seatower
 
+<<<<<<< HEAD
 Lenard, a soldier of the Balduran's Saetower is missing his secret lover Martina, a monk from the Seatower's Ilmater Monastery who went missing while being on an errand in town. She was last seen at the Ilmater Shrine in north east Baldur's Gate. I should go there and ask around whether anyone has seen her lately.~
+=======
+Lenard, a soldier of the Balduran's Seatower is missing his secret lover Martina, a monk from the Seatower's Ilmater Monastery who went missing while being on an errand in town. She was last seen at the Ilmater Shrine in north east Baldur's Gate. I should go there and ask around whether anyone has seen her lately.~
+>>>>>>> 37e8925 (Some minor fixes and cleaning.)
 @794  = ~Missing Monk in the Seatower
 
 A beggar inside the Ilmater's Shrine suggested I'd go around ask other beggars about the missing monk Martina. I need to find the beggar who was here at the shrine when Martina was here.~

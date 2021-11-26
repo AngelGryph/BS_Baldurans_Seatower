@@ -194,8 +194,6 @@ FORBID_COMPONENT ~EET_end.tp2~ ~1~ @5
 	APPEND ~ACTION.IDS~ ~337 ReallyForceSpellPointRES(S:RES*,P:Target*)~
 	              UNLESS ~337 ReallyForceSpellPointRES(S:RES\*,P:Target\*)~
 
-//	APPEND ~ACTION.IDS~ ~7 CreateCreature(S:NewObject*,P:Location*,I:Face*Face)~ UNLESS ~7 CreateCreature(S:NewObject*,P:Location*,I:Face*Face)~
-
 	APPEND ~TRIGGER.IDS~ ~0x00A1 SpellCastOnMeRES(S:Spell*,O:Caster*)~
 	              UNLESS ~0x00A1 SpellCastOnMeRES(S:Spell\*,O:Caster\*)~
 	APPEND ~TRIGGER.IDS~ ~0x0091 SpellCastRES(S:Spell*,O:Object*)~
@@ -209,8 +207,6 @@ FORBID_COMPONENT ~EET_end.tp2~ ~1~ @5
 	APPEND ~TRIGGER.IDS~ ~0x40D5 ActuallyInCombat()~
 	              UNLESS ~0x40D5 ActuallyInCombat()~
 
-//	COPY ~bst/ids/formatio.ids~ ~override/formatio.ids~
-//	COPY ~bst/ids/face.ids~ ~override/face.ids~
 
 //****************************************************
 // Patch the harbour to accept a new entrance and exit
