@@ -2392,8 +2392,6 @@ INCLUDE ~%MOD_FOLDER%/lib/alter_searchmap.tpa~
     END
 
 
-/*
-
 // Move late-game items to BST shops
 
 BEGIN @6
@@ -2408,7 +2406,7 @@ FORBID_COMPONENT ~EET_end.tp2~ ~1~ @5
 // Remove robes of the archmagi from High Hedge
 // and move them to tower mage.
 
-COPY_EXISTING ~highedg.sto~ ~override~
+COPY_EXISTING ~highhedg.sto~ ~override~
 	REMOVE_STORE_ITEM ~clck15~ ~clck16~
 
 COPY_EXISTING ~bstrmage.sto~ ~override~
@@ -2426,4 +2424,3 @@ COPY_EXISTING ~ysfltchr.sto~ ~override~
 	ADD_STORE_ITEM ~xbow06~ LAST #0 #0 #0 ~identified&unstealable~ #1
 
 
-*/

@@ -5,6 +5,8 @@
 @3 = ~This mod should be installed BEFORE the Worldmap mod.~
 @4 = ~Updating Worldmap...~
 @5 = ~This mod needs to be installed before EET_End on your EET install.~
+@6 = ~Move late-game items to BST shops~
+@7 = ~This component requires the main component of BST.~
 
 //******************
 // Mapnotes and info points
