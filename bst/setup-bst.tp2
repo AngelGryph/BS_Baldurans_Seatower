@@ -423,7 +423,7 @@ BUT_ONLY_IF_IT_CHANGES
 
 
 /* add travel trigger and door. polygons for door by Gwendolyne. Thank you very much! */
-INCLUDE ~bst/lib/bs_Are_fonctions_macros.tpa~    // Load Library (area functions & macros).
+INCLUDE ~bst/lib/bs_Are_functions_macros.tpa~    // Load Library (area functions & macros).
 INCLUDE ~bst/tpa/bs_vertices_table.tpa~            // Load Arrays of new doors vertex.
 
 LAM ~bs_DEF_AREA_OFFSETS~                        // LOADS the main offsets used to patch ARE files.
@@ -488,7 +488,7 @@ ADD_JOURNAL TITLE (@917) @918 @919 USING ~bst/language/autotra/%LANGUAGE%/bst_se
 
 /* bgt: delete journal entries upon start of BG2 */
 ACTION_IF GAME_IS ~bgt~ THEN BEGIN
-  EXTEND_TOP ~AR0602.bcs~ ~bst/area scripts/gamebcs/bgt_AR0602.baf~ EVALUATE_BUFFER USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+  EXTEND_TOP ~AR0602.bcs~ ~bst/area_scripts/gamebcs/bgt_AR0602.baf~ EVALUATE_BUFFER USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
 END
 
 
@@ -669,6 +669,17 @@ END
 	SAY NAME1 @575
 	SAY NAME2 @575
 	SAY IDENTIFIED_DESC @576
+
+/*
+// ---------------
+// New store items
+// ---------------
+
+// Headband of Charisma
+	COPY ~bst/items/bsband01.itm~ ~override/bsband01.itm~
+	SAY NAME2 @577
+	SAY IDENTIFIED_DESC @578
+*/
 
 /* deprecated
 // Cook's storeroom key
@@ -2117,7 +2128,7 @@ END
 //##################################################
 
 /* Cutscene scripts */
-COMPILE EVALUATE_BUFFER ~bst/cutscene scripts/.~
+COMPILE EVALUATE_BUFFER ~bst/cutscene_scripts/.~
 
 
 
@@ -2125,59 +2136,59 @@ COMPILE EVALUATE_BUFFER ~bst/cutscene scripts/.~
 // Area Scripts
 
 /* extend existing ones */
-LAF extend_area_script STR_VAR area="%NWBaldursGate_Helm&Cloak_L1%" bottom="bst/area scripts/gamebcs/ar0116.baf"   END
+LAF extend_area_script STR_VAR area="%NWBaldursGate_Helm&Cloak_L1%" bottom="bst/area_scripts/gamebcs/ar0116.baf"   END
 
 /* EXTEND_TOP to make sure it is executed */
-LAF extend_area_script STR_VAR area="%NEBaldursGate%" top="bst/area scripts/gamebcs/ar0300.baf"   END
+LAF extend_area_script STR_VAR area="%NEBaldursGate%" top="bst/area_scripts/gamebcs/ar0300.baf"   END
 
-LAF extend_area_script STR_VAR area="%NBaldursGate%" bottom="bst/area scripts/gamebcs/ar0200.baf"   END
+LAF extend_area_script STR_VAR area="%NBaldursGate%" bottom="bst/area_scripts/gamebcs/ar0200.baf"   END
 
-LAF extend_area_script STR_VAR area="%DurlagsTower_L3%" bottom="bst/area scripts/gamebcs/ar0504.baf"   END
+LAF extend_area_script STR_VAR area="%DurlagsTower_L3%" bottom="bst/area_scripts/gamebcs/ar0504.baf"   END
 
-LAF extend_area_script STR_VAR area="%BaldursGateDocks_WaterQueensHouse%" bottom="bst/area scripts/gamebcs/ar0609.baf"   END
+LAF extend_area_script STR_VAR area="%BaldursGateDocks_WaterQueensHouse%" bottom="bst/area_scripts/gamebcs/ar0609.baf"   END
 
-LAF extend_area_script STR_VAR area="%WyrmsCrossing%" bottom="bst/area scripts/gamebcs/ar0900.baf"   END
+LAF extend_area_script STR_VAR area="%WyrmsCrossing%" bottom="bst/area_scripts/gamebcs/ar0900.baf"   END
 
-LAF extend_area_script STR_VAR area="%SWBaldursGate_YeOldeInn_L1%" bottom="bst/area scripts/gamebcs/ar1113.baf"   END
+LAF extend_area_script STR_VAR area="%SWBaldursGate_YeOldeInn_L1%" bottom="bst/area_scripts/gamebcs/ar1113.baf"   END
 
 /* this needed to be patched via EXTEND_TOP or it wasn't executed */
-LAF extend_area_script STR_VAR area="%BaldursGateDocks%" top="bst/area scripts/gamebcs/ar1200.baf"   END
+LAF extend_area_script STR_VAR area="%BaldursGateDocks%" top="bst/area_scripts/gamebcs/ar1200.baf"   END
 
-LAF extend_area_script STR_VAR area="%ShipwrecksCoast%" bottom="bst/area scripts/gamebcs/ar3100.baf"   END
+LAF extend_area_script STR_VAR area="%ShipwrecksCoast%" bottom="bst/area_scripts/gamebcs/ar3100.baf"   END
 
-LAF extend_area_script STR_VAR area="%NashkelCarnival%" bottom="bst/area scripts/gamebcs/ar4900.baf"   END
+LAF extend_area_script STR_VAR area="%NashkelCarnival%" bottom="bst/area_scripts/gamebcs/ar4900.baf"   END
 
 /* attach messenger for slave trader quest */
-LAF extend_area_script STR_VAR area="%BaldursGateDocks%" top="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
-LAF extend_area_script STR_VAR area="%CentralBaldursGate%" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
-LAF extend_area_script STR_VAR area="%EBaldursGate%" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
-LAF extend_area_script STR_VAR area="%NBaldursGate%" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
-LAF extend_area_script STR_VAR area="%WBaldursGate%" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
-LAF extend_area_script STR_VAR area="%NEBaldursGate%" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
-LAF extend_area_script STR_VAR area="%NWBaldursGate%" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
-LAF extend_area_script STR_VAR area="%SEBaldursGate%" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
-LAF extend_area_script STR_VAR area="%SWBaldursGate%" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%BaldursGateDocks%" top="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%CentralBaldursGate%" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%EBaldursGate%" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%NBaldursGate%" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%WBaldursGate%" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%NEBaldursGate%" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%NWBaldursGate%" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%SEBaldursGate%" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="%SWBaldursGate%" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
 
-/* compile mod area scripts (includes trigger scripts) */
-COMPILE EVALUATE_BUFFER ~bst/area scripts/.~
+/* compile mod area_scripts (includes trigger scripts) */
+COMPILE EVALUATE_BUFFER ~bst/area_scripts/.~
 
 /* also add messenger to Seatower Area */
-LAF extend_area_script STR_VAR area="bs1000" bottom="bst/area scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
+LAF extend_area_script STR_VAR area="bs1000" bottom="bst/area_scripts/gamebcs/spawn_messenger_slaverquest.baf"   END
 
 
 /* only BGT+EET: sunrise / sunset movies */
 ACTION_IF GAME_IS ~bgt~ THEN BEGIN
-  EXTEND_BOTTOM ~bs1000.bcs~ ~bst/area scripts/gamebcs/bs1000_bgt.baf~
+  EXTEND_BOTTOM ~bs1000.bcs~ ~bst/area_scripts/gamebcs/bs1000_bgt.baf~
 END
 ACTION_IF GAME_IS ~eet~ THEN BEGIN
-  EXTEND_BOTTOM ~bs1000.bcs~ ~bst/area scripts/gamebcs/bs1000_eet.baf~
+  EXTEND_BOTTOM ~bs1000.bcs~ ~bst/area_scripts/gamebcs/bs1000_eet.baf~
 END
 
 /* patch baldur.bcs:
 - to know whether PC knows about Bhaal heritage (for King of Restless Dead) 
 - fire elemental will break out of barrel when timer run */
 
-EXTEND_TOP ~baldur.bcs~ ~bst/area scripts/gamebcs/baldur.baf~ EVALUATE_BUFFER 
+EXTEND_TOP ~baldur.bcs~ ~bst/area_scripts/gamebcs/baldur.baf~ EVALUATE_BUFFER 
 
 
 /* patch Tamoko's dialogue with Know Bhaal variable */
@@ -2195,34 +2206,34 @@ COMPILE ~...inlined/bst_tamoko.d~ EVALUATE_BUFFER
 // scripts from BGII missing in BG:EE
 
 ACTION_IF !FILE_EXISTS_IN_GAME ~mage10a.bcs~ THEN BEGIN
-  COMPILE EVALUATE_BUFFER ~bst/area scripts/gamebcs/mage10a.baf~
+  COMPILE EVALUATE_BUFFER ~bst/area_scripts/gamebcs/mage10a.baf~
 END
 
 ACTION_IF !FILE_EXISTS_IN_GAME ~OARCH02.bcs~ THEN BEGIN
-  COMPILE EVALUATE_BUFFER ~bst/area scripts/gamebcs/OARCH02.baf~
+  COMPILE EVALUATE_BUFFER ~bst/area_scripts/gamebcs/OARCH02.baf~
 END
 
 ACTION_IF !FILE_EXISTS_IN_GAME ~pries8a.bcs~ THEN BEGIN
-  COMPILE EVALUATE_BUFFER ~bst/area scripts/gamebcs/pries8a.baf~
+  COMPILE EVALUATE_BUFFER ~bst/area_scripts/gamebcs/pries8a.baf~
 END
 
 ACTION_IF !FILE_EXISTS_IN_GAME ~priest12.bcs~ THEN BEGIN
-  COMPILE EVALUATE_BUFFER ~bst/area scripts/gamebcs/priest12.baf~
+  COMPILE EVALUATE_BUFFER ~bst/area_scripts/gamebcs/priest12.baf~
 END
 
 /* for Leonhard 'the Fierce' (slave trader contact) bsslav01.cre */
 ACTION_IF !FILE_EXISTS_IN_GAME ~THIEFMAG.bcs~ THEN BEGIN
-  COMPILE EVALUATE_BUFFER ~bst/area scripts/gamebcs/THIEFMAG.baf~
+  COMPILE EVALUATE_BUFFER ~bst/area_scripts/gamebcs/THIEFMAG.baf~
 END
 
 /* for slave trader bouncers bsslav02-03.cre */
 ACTION_IF !FILE_EXISTS_IN_GAME ~THIEF14T.bcs~ THEN BEGIN
-  COMPILE EVALUATE_BUFFER ~bst/area scripts/gamebcs/THIEF14T.baf~
+  COMPILE EVALUATE_BUFFER ~bst/area_scripts/gamebcs/THIEF14T.baf~
 END
 
 /* for slave trader bouncers bsslav02-03.cre */
 ACTION_IF !FILE_EXISTS_IN_GAME ~GPUSE.bcs~ THEN BEGIN
-  COMPILE EVALUATE_BUFFER ~bst/area scripts/gamebcs/GPUSE.baf~
+  COMPILE EVALUATE_BUFFER ~bst/area_scripts/gamebcs/GPUSE.baf~
 END
 
 
@@ -2242,8 +2253,8 @@ END
 
 //##################################################
 // Cre Scripts
-	COMPILE EVALUATE_BUFFER ~bst/cre scripts/react/ysreact.baf~ // Do ysreact first to prevent compile warnings
-	COMPILE EVALUATE_BUFFER ~bst/cre scripts/.~
+	COMPILE EVALUATE_BUFFER ~bst/cre_scripts/react/ysreact.baf~ // Do ysreact first to prevent compile warnings
+	COMPILE EVALUATE_BUFFER ~bst/cre_scripts/.~
 
 
 
@@ -2506,3 +2517,38 @@ INCLUDE ~%MOD_FOLDER%/lib/alter_searchmap.tpa~
     END
 
 
+/*
+
+// Move late-game items to BST shops
+
+BEGIN @6
+DESIGNATED 100
+LABEL BS_BalduransSeatower-move_late-game_items
+
+REQUIRE_PREDICATE GAME_IS ~bgt bgee eet~ @2
+REQUIRE_COMPONENT ~setup-bst.tp2~ ~0~ @7
+FORBID_COMPONENT ~EET_end.tp2~ ~0~ @5
+FORBID_COMPONENT ~EET_end.tp2~ ~1~ @5
+
+// Remove robes of the archmagi from High Hedge
+// and move them to tower mage.
+
+COPY_EXISTING ~highedg.sto~ ~override~
+	REMOVE_STORE_ITEM ~clck15~ ~clck16~
+
+COPY_EXISTING ~bstrmage.sto~ ~override~
+	ADD_STORE_ITEM ~clck15~ LAST #0 #0 #0 ~identified&unstealable~ #1
+	ADD_STORE_ITEM ~clck16~ LAST #0 #0 #0 ~identified&unstealable~ #1
+
+
+// Remove The Army Scythe from Thunderhammer Smithy
+// and move it to tower fletcher.
+
+COPY_EXISTING ~taerum.sto~ ~override~
+	REMOVE_STORE_ITEM ~xbow06~
+
+COPY_EXISTING ~ysfltchr.sto~ ~override~
+	ADD_STORE_ITEM ~xbow06~ LAST #0 #0 #0 ~identified&unstealable~ #1
+
+
+*/
