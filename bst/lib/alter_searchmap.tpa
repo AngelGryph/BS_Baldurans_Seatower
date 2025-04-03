@@ -9,7 +9,7 @@ DEFINE_ACTION_FUNCTION ~ALTER_SEARCHMAP~
 
 BEGIN
 	PRINT ~%path_to_2da_file% - %areaname%~ 
-	COPY ~%path_to_2da_file%~ ~%path_to_2da_file%~
+	COPY - ~%path_to_2da_file%~ ~%path_to_2da_file%~	// Angel: Don't actually copy if you're not gonna change anything.
 		READ_2DA_ENTRIES_NOW ~newpixelarray~ 4
 		COUNT_2DA_ROWS 4 ~pixelnumber~
 		

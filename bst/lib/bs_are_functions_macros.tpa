@@ -557,19 +557,19 @@ fj_closed_box_bottom = %fj_closed_box_bottom%"*/
 	PATCH_PHP_EACH bs_New_are_vertices AS donnees => door BEGIN
 		PATCH_IF ("%donnees_0%" STRING_COMPARE_CASE "%bs_Area%" = 0) && ("%door%" STRING_COMPARE_CASE "%fj_name%" = 0) BEGIN 
 			PATCH_IF ("%donnees_1%" STRING_COMPARE_CASE "OP" = 0) BEGIN 
-				SPRINT add_vertex EVAL "fj_door_open_vert_%bs_Nb_vertices_open%" 
+				SPRINT add_vertex "fj_door_open_vert_%bs_Nb_vertices_open%" 
 				bs_Nb_vertices_open +=1
 			END
 			PATCH_IF ("%donnees_1%" STRING_COMPARE_CASE "CL" = 0) BEGIN 
-				SPRINT add_vertex EVAL "fj_door_closed_vert_%bs_Nb_vertices_closed%" 
+				SPRINT add_vertex "fj_door_closed_vert_%bs_Nb_vertices_closed%" 
 				bs_Nb_vertices_closed +=1 
 			END
 
-			PATCH_IF NOT (IS_AN_INT "%donnees_2%") BEGIN bs_v_coordX = 9999 END ELSE BEGIN bs_v_coordX = EVAL "%donnees_2%" END
-			PATCH_IF NOT (IS_AN_INT "%donnees_3%") BEGIN bs_v_coordY = 9999 END ELSE BEGIN bs_v_coordY = EVAL "%donnees_3%" END
+			PATCH_IF NOT (IS_AN_INT "%donnees_2%") BEGIN bs_v_coordX = 9999 END ELSE BEGIN bs_v_coordX = "%donnees_2%" END
+			PATCH_IF NOT (IS_AN_INT "%donnees_3%") BEGIN bs_v_coordY = 9999 END ELSE BEGIN bs_v_coordY = "%donnees_3%" END
 
 			PATCH_IF ("%bs_v_coordX%" != 9999) AND ("%bs_v_coordY%" != 9999) BEGIN
-				SPRINT bs_recap_vertex EVAL "%bs_recap_vertex% %add_vertex% = (%bs_v_coordX% + (%bs_v_coordY% << 16))"
+				SPRINT bs_recap_vertex "%bs_recap_vertex% %add_vertex% = (%bs_v_coordX% + (%bs_v_coordY% << 16))"
 				PATCH_IF ("%donnees_1%" STRING_COMPARE_CASE "OP" = 0) BEGIN
 					PATCH_IF (bs_v_coordX < 5120) && (bs_v_coordX < bs_open_box_left) BEGIN		SET bs_open_box_left = bs_v_coordX END
 					PATCH_IF (bs_v_coordX < 5120) && (bs_v_coordX > bs_open_box_right) BEGIN	SET bs_open_box_right = bs_v_coordX END
@@ -621,19 +621,19 @@ fj_closed_box_bottom	: old = %fj_old_closed_box_bottom%	--> new = %bs_closed_box
 	PATCH_PHP_EACH bs_Doors_cell_vertices AS donnees => door BEGIN
 		PATCH_IF ("%donnees_0%" STRING_COMPARE_CASE "%bs_Area%" = 0) && ("%door%" STRING_COMPARE_CASE "%fj_name%" = 0) BEGIN 
 			PATCH_IF ("%donnees_1%" STRING_COMPARE_CASE "OP" = 0) BEGIN 
-				SPRINT add_cell_vertex EVAL "fj_cell_open_vert_%bs_Nb_cell_vertices_open%" 
+				SPRINT add_cell_vertex "fj_cell_open_vert_%bs_Nb_cell_vertices_open%" 
 				bs_Nb_cell_vertices_open +=1
 			END
 			PATCH_IF ("%donnees_1%" STRING_COMPARE_CASE "CL" = 0) BEGIN 
-				SPRINT add_cell_vertex EVAL "fj_cell_closed_vert_%bs_Nb_cell_vertices_closed%" 
+				SPRINT add_cell_vertex "fj_cell_closed_vert_%bs_Nb_cell_vertices_closed%" 
 				bs_Nb_cell_vertices_closed +=1 
 			END
 
-			PATCH_IF NOT (IS_AN_INT "%donnees_2%") BEGIN bs_v_coordX = 9999 END ELSE BEGIN bs_v_coordX = EVAL "%donnees_2%" END
-			PATCH_IF NOT (IS_AN_INT "%donnees_3%") BEGIN bs_v_coordY = 9999 END ELSE BEGIN bs_v_coordY = EVAL "%donnees_3%" END
+			PATCH_IF NOT (IS_AN_INT "%donnees_2%") BEGIN bs_v_coordX = 9999 END ELSE BEGIN bs_v_coordX = "%donnees_2%" END
+			PATCH_IF NOT (IS_AN_INT "%donnees_3%") BEGIN bs_v_coordY = 9999 END ELSE BEGIN bs_v_coordY = "%donnees_3%" END
 
 			PATCH_IF ("%bs_v_coordX%" != 9999) AND ("%bs_v_coordY%" != 9999) BEGIN
-				SPRINT bs_recap_vertex EVAL "%bs_recap_vertex% %add_cell_vertex% = (%bs_v_coordX% + (%bs_v_coordY% << 16))"
+				SPRINT bs_recap_vertex "%bs_recap_vertex% %add_cell_vertex% = (%bs_v_coordX% + (%bs_v_coordY% << 16))"
 /* Control debug : useless when the function works fine !
 PATCH_LOG ~bs_recap_vertex = %bs_recap_vertex%~*/
 			END
@@ -859,14 +859,14 @@ fj_box_bottom = %fj_box_bottom%"*/
 
 	PATCH_PHP_EACH bs_New_are_vertices AS donnees => region BEGIN
 		PATCH_IF ("%donnees_0%" STRING_COMPARE_CASE "%bs_Area%" = 0) && ("%region%" STRING_COMPARE_CASE "%fj_name%" = 0) BEGIN 
-			SPRINT add_vertex EVAL "fj_vertex_%bs_Nb_vertices%" 
+			SPRINT add_vertex "fj_vertex_%bs_Nb_vertices%" 
 			bs_Nb_vertices +=1
 
-			PATCH_IF NOT (IS_AN_INT "%donnees_2%") BEGIN bs_v_coordX = 9999 END ELSE BEGIN bs_v_coordX = EVAL "%donnees_2%" END
-			PATCH_IF NOT (IS_AN_INT "%donnees_3%") BEGIN bs_v_coordY = 9999 END ELSE BEGIN bs_v_coordY = EVAL "%donnees_3%" END
+			PATCH_IF NOT (IS_AN_INT "%donnees_2%") BEGIN bs_v_coordX = 9999 END ELSE BEGIN bs_v_coordX = "%donnees_2%" END
+			PATCH_IF NOT (IS_AN_INT "%donnees_3%") BEGIN bs_v_coordY = 9999 END ELSE BEGIN bs_v_coordY = "%donnees_3%" END
 
 			PATCH_IF ("%bs_v_coordX%" != 9999) AND ("%bs_v_coordY%" != 9999) BEGIN
-				SPRINT bs_recap_vertex EVAL "%bs_recap_vertex% %add_vertex% = (%bs_v_coordX% + (%bs_v_coordY% << 16))"
+				SPRINT bs_recap_vertex "%bs_recap_vertex% %add_vertex% = (%bs_v_coordX% + (%bs_v_coordY% << 16))"
 				PATCH_IF (bs_v_coordX < 5120) && (bs_v_coordX < bs_box_left)	BEGIN SET bs_box_left = bs_v_coordX END
 				PATCH_IF (bs_v_coordX < 5120) && (bs_v_coordX > bs_box_right)	BEGIN SET bs_box_right = bs_v_coordX END
 				PATCH_IF (bs_v_coordY < 3840) && (bs_v_coordY < bs_box_top)		BEGIN SET bs_box_top = bs_v_coordY END

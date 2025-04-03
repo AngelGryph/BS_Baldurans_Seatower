@@ -1,140 +1,45 @@
-BACKUP ~bst/backup~
+BACKUP ~weidu_external/backup/bst~
 AUTHOR ~https://www.gibberlings3.net/forums/forum/213-baldurans-seatower/~
 VERSION ~vEAOB.9~  
 
 README ~bst/documentation/english.bst.txt~
 
+AUTO_EVAL_STRINGS
+
 ALWAYS
+  // Detect game version
 
-/* check for a ready SoD (doesn't work on Windows...) */
-
-ACTION_IF ((FILE_EXISTS ~dlc/sod-dlc.zip~) OR (FILE_EXISTS ~sod-dlc.zip~)) THEN BEGIN
-  FAIL ~You need to prepare your SoD game before installing mods. Check the readme for more information and a link to download Modmerge or the DLC Merger.~
-END
-
-/* DavidW's code for unifying the area script patching. With many thanks! 
-To be used later in the form:
-
-  LAF extend_area_script STR_VAR area="%Candlekeep%" top="bg1re/script/AR2600.baf"   END
-*/
-  DEFINE_ACTION_FUNCTION extend_area_script 
-    STR_VAR area=""
-            top=""
-            bottom=""
-    BEGIN
-      // find the area script from the area file
-      COPY_EXISTING "%area%.are" override
-           READ_ASCII 0x94 script
-      BUT_ONLY
-      // if it doesn't exist, give it a default name
-      ACTION_IF "%script%" STRING_EQUAL "" BEGIN
-          OUTER_INNER_PATCH_SAVE script "%area%" BEGIN
-                REPLACE_TEXTUALLY "FW" "_AR" // TUTU naming conventions
-          END
-
-  // added by argent77: assign area script if needed
-          COPY_EXISTING "%area%.are" override
-                WRITE_ASCIIE 0x94 ~%script%~ #8
+  INCLUDE ~bst/lib/detect_game_version.tpa~
 
 
-      END
-      // extend the script
-      ACTION_IF "%top%" STRING_COMPARE "" BEGIN
-        EXTEND_TOP "%script%.bcs" "%top%" EVALUATE_BUFFER
-      END
-      ACTION_IF "%bottom%" STRING_COMPARE "" BEGIN
-       EXTEND_BOTTOM "%script%.bcs" "%bottom%" EVALUATE_BUFFER
-      END
-    END 
+  // Handle charsets immutably
 
-OUTER_SET enhanced_edition = 0 
- ACTION_IF GAME_IS ~tutu_totsc~ THEN BEGIN
-  PRINT ~Baldur's Gate Tutu detected~
-  INCLUDE ~bst/lib/g3_tutu_cpmvars.tpa~
- END
+  OUTER_SPRINT tra_base	"language"
+  OUTER_SPRINT tra_setup "bst_setup"
+  OUTER_SPRINT ini_file "bst"
 
- ACTION_IF GAME_IS ~bgt~ THEN BEGIN
-  PRINT ~Baldur's Gate Trilogy detected~
-  INCLUDE ~bst/lib/g3_bgt_cpmvars.tpa~ 
-  OUTER_SPRINT ~PLAYER1_NO_BLACKGUARD~ ~~
-  OUTER_SPRINT ~PLAYER2_NO_BLACKGUARD~ ~~
-  OUTER_SPRINT ~PLAYER3_NO_BLACKGUARD~ ~~
-  OUTER_SPRINT ~PLAYER4_NO_BLACKGUARD~ ~~
-  OUTER_SPRINT ~PLAYER5_NO_BLACKGUARD~ ~~
-  OUTER_SPRINT ~PLAYER6_NO_BLACKGUARD~ ~~
-  OUTER_SPRINT ~PLAYER1_BLACKGUARD~ ~~
-  OUTER_SPRINT SPIN996 ~BGIN996~ //TANARI_DEATH_GAZE
-  OUTER_SPRINT ~platform~ ~bgt~
- END
-
- ACTION_IF GAME_IS ~bgee~ THEN BEGIN
-  OUTER_SET enhanced_edition = 1 
-  /* Tell the player it is using bgee */
-  PRINT ~BG:EE detected...~ 
-  INCLUDE ~bst/lib/g3_bgee_cpmvars.tpa~
-  OUTER_SPRINT ~PLAYER1_NO_BLACKGUARD~ ~!Kit(Player1,Blackguard)~
-  OUTER_SPRINT ~PLAYER2_NO_BLACKGUARD~ ~!Kit(Player2,Blackguard)~
-  OUTER_SPRINT ~PLAYER3_NO_BLACKGUARD~ ~!Kit(Player3,Blackguard)~
-  OUTER_SPRINT ~PLAYER4_NO_BLACKGUARD~ ~!Kit(Player4,Blackguard)~
-  OUTER_SPRINT ~PLAYER5_NO_BLACKGUARD~ ~!Kit(Player5,Blackguard)~
-  OUTER_SPRINT ~PLAYER6_NO_BLACKGUARD~ ~!Kit(Player6,Blackguard)~
-  OUTER_SPRINT ~PLAYER1_BLACKGUARD~ ~Kit(Player1,Blackguard)~
-  OUTER_SPRINT SPIN996 ~SPIN996~ //TANARI_DEATH_GAZE
-  OUTER_SPRINT ~platform~ ~bgee~
- END
-
- ACTION_IF GAME_IS ~eet~ THEN BEGIN
-  OUTER_SET enhanced_edition = 1 
-  /* Tell the player it is using eet */
-  PRINT ~EET detected.~
-  INCLUDE ~EET/other/cpmvars/eet_cpmvars.tpa~
-  OUTER_SPRINT ~PLAYER1_NO_BLACKGUARD~ ~!Kit(Player1,Blackguard)~
-  OUTER_SPRINT ~PLAYER2_NO_BLACKGUARD~ ~!Kit(Player2,Blackguard)~
-  OUTER_SPRINT ~PLAYER3_NO_BLACKGUARD~ ~!Kit(Player3,Blackguard)~
-  OUTER_SPRINT ~PLAYER4_NO_BLACKGUARD~ ~!Kit(Player4,Blackguard)~
-  OUTER_SPRINT ~PLAYER5_NO_BLACKGUARD~ ~!Kit(Player5,Blackguard)~
-  OUTER_SPRINT ~PLAYER6_NO_BLACKGUARD~ ~!Kit(Player6,Blackguard)~
-  OUTER_SPRINT ~PLAYER1_BLACKGUARD~ ~Kit(Player1,Blackguard)~
-  OUTER_SPRINT SPIN996 ~SPIN996~ //TANARI_DEATH_GAZE
-  OUTER_SPRINT ~platform~ ~eet~
- END
-
-  /* BG:EE - formatted texts etc. */
-
-    /* Copies tra files into the autotra-folder (to leave the originals untouched) */
-    DEFINE_ACTION_FUNCTION autotra_workaround BEGIN
-      COPY ~bst/language/english~  ~bst/language/autotra/%LANGUAGE%~
-      COPY ~bst/language/%LANGUAGE%~  ~bst/language/autotra/%LANGUAGE%~
-    END
-
-    LAF autotra_workaround END
+  INCLUDE ~bst/lib/sfo_immutable.tpa~
 
 
-//  ACTION_DEFINE_ARRAY fl#noconvert BEGIN END
+  // Other stuff we need
 
- ACTION_DEFINE_ARRAY fl#reload BEGIN bst_setup END
-
-    LAF HANDLE_CHARSETS
-      INT_VAR
-        infer_charsets = 1
-      STR_VAR
-        tra_path = EVAL ~bst/language/autotra~
-//        noconvert_array = fl#noconvert
-        reload_array = fl#reload
- END
-
-   /* TRAs declared in LANGUAGE must be reloaded - by hand, because of the copying (for non-EE version (for every running of installer!) - ALWAYS */
-
-  LOAD_TRA ~bst/language/autotra/english/bst_setup.tra~
-  LOAD_TRA ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
-
+  INCLUDE ~bst/lib/extend_area_script.tph~
 END //ALWAYS
 
 
-LANGUAGE ~English~ ~english~ ~bst/language/english/bst_setup.tra~
+LANGUAGE
+	~English~
+	~english~
+	~bst/language/english/bst_setup.tra~
+	~weidu_external/lang/english/bst_setup.tra~
 /*
-LANGUAGE ~German~ ~german~ ~bst/language/english/bst_setup.tra~
-			   ~bst/language/german/bst_setup.tra~
+LANGUAGE
+	~German~
+	~german~
+	~bst/language/english/bst_setup.tra~
+	~weidu_external/lang/english/bst_setup.tra~
+	~bst/language/german/bst_setup.tra~
+	~weidu_external/lang/german/bst_setup.tra~
 
 */
 
@@ -436,59 +341,59 @@ INCLUDE ~bst/tpa/AddBG1_AR1200Door.tph~
 // Journal Entries
 
 /* The Fletcher's Feathers */
-ADD_JOURNAL TITLE (@700) @720 @721 @722 @723 @724 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@700) @720 @721 @722 @723 @724 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Halfslinger's Ale */
-ADD_JOURNAL TITLE (@701) @730 @731 @732 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@701) @730 @731 @732 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* The Tanner's Troubles */
-ADD_JOURNAL TITLE (@702) @740 @741 @742 @743 @744 @745 @746 @747 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@702) @740 @741 @742 @743 @744 @745 @746 @747 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* The Stolen Ilmater's Alms */
-ADD_JOURNAL TITLE (@703) @750 @751 @752 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@703) @750 @751 @752 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* The Mysterious Scroll */
-ADD_JOURNAL TITLE (@704) @760 @761 @762 @763 @764 @765 @766 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@704) @760 @761 @762 @763 @764 @765 @766 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Help Shuck's Brother */
-ADD_JOURNAL TITLE (@705) @805 @806 @807 @808 @809 @810 @811 @812 @813 @814 @815 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@705) @805 @806 @807 @808 @809 @810 @811 @812 @813 @814 @815 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Dark Power in the Seatower Catacombs */
-ADD_JOURNAL TITLE (@706) @774 @775 @776 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@706) @774 @775 @776 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* An Orphan in the Seatower */
-ADD_JOURNAL TITLE (@707) @777 @778 @779 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@707) @777 @778 @779 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Cage the Rabbits */
-ADD_JOURNAL TITLE (@708) @780 @781 @782 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@708) @780 @781 @782 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Strange Happenings in Room No. 3.4 */
-ADD_JOURNAL TITLE (@709) @785 @786 @787 @788 @789 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@709) @785 @786 @787 @788 @789 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Rats in the Seatower Inn */
-ADD_JOURNAL TITLE (@710) @790 @791 @792 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@710) @790 @791 @792 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Missing Monk in the Seatower */
-ADD_JOURNAL TITLE (@711) @793 @794 @795 @796 @797 @798 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@711) @793 @794 @795 @796 @797 @798 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* The Prisoner in the Seatower Prison */
-ADD_JOURNAL TITLE (@712) @799 @800 @801 @802 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@712) @799 @800 @801 @802 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Working with the Smugglers */
-ADD_JOURNAL TITLE (@713) @830 @831 @832 @833 @834 @835 @836 @837 @838 @839 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@713) @830 @831 @832 @833 @834 @835 @836 @837 @838 @839 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* ~Confront the Slave Traders in Baldur's Gate */
-ADD_JOURNAL TITLE (@714) @880 @881 @882 @883 @884 @885 @886 @887 @888 @889 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@714) @880 @881 @882 @883 @884 @885 @886 @887 @888 @889 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Myconides in the Seatower Prison */
-ADD_JOURNAL TITLE (@715) @753 @754 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@715) @753 @754 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Doppelgangers Inside the Seatower */
-ADD_JOURNAL TITLE (@716) @860 @861 @862 @863 @864 @865 @866 @867 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@716) @860 @861 @862 @863 @864 @865 @866 @867 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* The Breach in the Seatower Prison */
-ADD_JOURNAL TITLE (@717) @816 @817 @818 @822 @823 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@717) @816 @817 @818 @822 @823 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Ingredients for the Seatower Mage */
-ADD_JOURNAL TITLE (@718) @850 @851 @852 @853 @854 @855 @856 @857 @858 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@718) @850 @851 @852 @853 @854 @855 @856 @857 @858 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* The Dead Adjutant */
-ADD_JOURNAL TITLE (@719) @819 @820 @821 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@719) @819 @820 @821 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Working for the Slavers */
-ADD_JOURNAL TITLE (@842) @840 @841 @843 @844 @845 @846 @847 @848 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@842) @840 @841 @843 @844 @845 @846 @847 @848 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Liqueur for the Tanner */
-ADD_JOURNAL TITLE (@875) @874 @876 @877 @878 @879 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@875) @874 @876 @877 @878 @879 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Fire Elemental in the Seatower Storeroom */
-ADD_JOURNAL TITLE (@900) @901 @902 @903 @904 @905 @906 @907 @908 @909 @910 @911 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@900) @901 @902 @903 @904 @905 @906 @907 @908 @909 @910 @911 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Fire Proof Barrel for the Seatower Armorer */
-ADD_JOURNAL TITLE (@912) @913 @914 @915 @916 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@912) @913 @914 @915 @916 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 /* Sea Troll's Sebaceous Gland for the Seatower Winchman */
-ADD_JOURNAL TITLE (@917) @918 @919 USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+ADD_JOURNAL TITLE (@917) @918 @919 USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 
 /* bgt: delete journal entries upon start of BG2 */
 ACTION_IF GAME_IS ~bgt~ THEN BEGIN
-  EXTEND_TOP ~AR0602.bcs~ ~bst/area_scripts/gamebcs/bgt_AR0602.baf~ EVALUATE_BUFFER USING ~bst/language/autotra/%LANGUAGE%/bst_setup.tra~
+  EXTEND_TOP ~AR0602.bcs~ ~bst/area_scripts/gamebcs/bgt_AR0602.baf~ EVALUATE_BUFFER USING ~%tra_loc%/%LANGUAGE%/bst_setup.tra~
 END
 
 
@@ -1589,10 +1494,10 @@ BUT_ONLY
             SET target_base_index = "-1" // every other area begins by 0
         END
         LPF UPDATE_PVRZ_INDICES INT_VAR target_base_index = ~%target_base_index%~ RET original_base_index new_base_index END
-      LAF TIS_RES_TO_PVRZ STR_VAR tis_res = EVAL ~%BASH_FOR_FILESPEC%~ RET prefix END
+      LAF TIS_RES_TO_PVRZ STR_VAR tis_res = ~%BASH_FOR_FILESPEC%~ RET prefix END
       ACTION_IF (new_base_index >= 0) BEGIN // It is strongly recommended to check the return values of "UPDATE_PVRZ_INDICES".
         ACTION_BASH_FOR ~bst/tis_bgee~ ~%prefix%[0-9][0-9]\.pvrz$~ BEGIN // Installing associated PVRZ resources
-          LAF INSTALL_PVRZ INT_VAR original_base_index new_base_index STR_VAR source_file = EVAL ~%BASH_FOR_FILESPEC%~ END
+          LAF INSTALL_PVRZ INT_VAR original_base_index new_base_index STR_VAR source_file = ~%BASH_FOR_FILESPEC%~ END
         END
       END
     END
@@ -1664,7 +1569,7 @@ COPY_EXISTING ~bs0110.are~ ~override~
     STR_VAR
     fj_structure_type   = region
     fj_name             = travar1200
-    fj_destination_area = EVAL ~%BaldursGateDocks%~
+    fj_destination_area = ~%BaldursGateDocks%~
     fj_destination_name = exitbs0110
   END
 BUT_ONLY_IF_IT_CHANGES
@@ -1771,7 +1676,7 @@ COPY_EXISTING ~bs0200.are~ ~override~
     STR_VAR
     fj_structure_type   = region
     fj_name             = travar0609
-    fj_destination_area = EVAL ~%BaldursGateDocks_WaterQueensHouse%~
+    fj_destination_area = ~%BaldursGateDocks_WaterQueensHouse%~
     fj_destination_name = exitbs0200
   END
 
@@ -1956,7 +1861,7 @@ COPY_EXISTING ~bs1000.are~ ~override~
     STR_VAR
     fj_structure_type   = region
     fj_name             = Travfw1200
-    fj_destination_area = EVAL ~%BaldursGateDocks%~
+    fj_destination_area = ~%BaldursGateDocks%~
     fj_destination_name = exitbs1000
   END
 
@@ -2266,7 +2171,8 @@ END
 //##################################################
 /* High level encounter under the Tailor's Shop, by Acifer */
 
-WITH_TRA ~bst/language/autotra/%LANGUAGE%/bst_highlevel.tra~ BEGIN 
+PRINT ~%tra_loc%/%LANGUAGE%/bst_highlevel.tra~
+WITH_TRA ~%tra_loc%/%LANGUAGE%/bst_highlevel.tra~ BEGIN 
 
   INCLUDE ~bst/bst_Highlevel/bst_highlevel.tpa~
 
@@ -2296,9 +2202,9 @@ END ELSE BEGIN
 END
 ACTION_IF FILE_EXISTS ~Worldmap/map_mods_trans.tra~ BEGIN
 	COPY ~Worldmap/map_mods_trans.tra~ ~Worldmap~
-		APPEND_FILE ~bst/language/autotra/%LANGUAGE%/worldmap.tra~
+		APPEND_FILE ~%tra_loc%/%LANGUAGE%/worldmap.tra~
 END ELSE BEGIN
-	COPY ~bst/language/autotra/%LANGUAGE%/worldmap.tra~ ~Worldmap/map_mods_trans.tra~
+	COPY ~%tra_loc%/%LANGUAGE%/worldmap.tra~ ~Worldmap/map_mods_trans.tra~
 END
 
 ACTION_IF NOT MOD_IS_INSTALLED ~setup-bp-bgt-worldmap.tp2~ ~0~ THEN BEGIN
@@ -2321,7 +2227,7 @@ ACTION_IF NOT MOD_IS_INSTALLED ~setup-bp-bgt-worldmap.tp2~ ~0~ THEN BEGIN
 
     ACTION_IF GAME_IS ~bgee~ BEGIN
 
-        COPY_EXISTING ~mapicons.bam~ ~override~
+        COPY_EXISTING - ~mapicons.bam~ ~override~	// Angel: Don't actually copy if we just want to read some data.
             READ_ASCII 0x0 sig (4)
             READ_ASCII 0x4 version (4)
         ACTION_IF (~%sig%~ STRING_EQUAL_CASE ~BAM ~ AND ~%version%~ STRING_EQUAL_CASE ~v2  ~) BEGIN
@@ -2351,9 +2257,6 @@ ACTION_IF NOT MOD_IS_INSTALLED ~setup-bp-bgt-worldmap.tp2~ ~0~ THEN BEGIN
                     new_icon_index // sequence number of your first icon in the new .bam - use this when you patch the worldmap
             END
         END
-
-	COPY ~%MOD_FOLDER%/wmp/%platform%/bgee_areas.tbl~  ~%MOD_FOLDER%/wmp/%platform%~
-		REPLACE_TEXTUALLY ~new_icon_index~ ~%new_icon_index%~
     END
 
     ACTION_IF GAME_IS ~bgt~ BEGIN
@@ -2368,62 +2271,34 @@ ACTION_IF NOT MOD_IS_INSTALLED ~setup-bp-bgt-worldmap.tp2~ ~0~ THEN BEGIN
             RET
                 new_icon_index // sequence number of your first icon in the new .bam - use this when you patch the worldmap
         END
-	COPY ~%MOD_FOLDER%/wmp/%platform%/bgt_areas.tbl~  ~%MOD_FOLDER%/wmp/%platform%~
-		REPLACE_TEXTUALLY ~new_icon_index~ ~%new_icon_index%~
     END
-END 
 
+
+  COPY ~%MOD_FOLDER%/wmp/%platform%/%platform%_areas.tbl~  ~%workspace%~
+	REPLACE_TEXTUALLY ~new_icon_index~ ~%new_icon_index%~
+END 
+ELSE	// Worldmaps actually is installed already.
+BEGIN
 
 /* workaround until path finding in "add_worldmap_tbl.tpa" is fixed */
-ACTION_IF MOD_IS_INSTALLED ~setup-bp-bgt-worldmap.tp2~ ~0~ THEN BEGIN
- COPY ~%MOD_FOLDER%/wmp/%platform%/%platform%_areas.tbl~  ~%MOD_FOLDER%/wmp/%platform%~
+  COPY ~%MOD_FOLDER%/wmp/%platform%/%platform%_areas.tbl~  ~%workspace%~
 		REPLACE_TEXTUALLY ~new_icon_index~ ~28~
 END
 
 
-ACTION_IF GAME_IS ~bgee~ BEGIN
-	INCLUDE ~%MOD_FOLDER%/lib/add_worldmap_tbl.tpa~
-	LAF ADD_WORLDMAP_TBL
-		INT_VAR
-		verbose = 1
-		inclSv = 0
-		STR_VAR
-		path_to_areas = EVAL ~%MOD_FOLDER%/wmp/bgee/bgee_areas.tbl~
-		path_to_areas_bp = EVAL ~%MOD_FOLDER%/wmp/areas.tbl~
-		path_to_links = EVAL ~%MOD_FOLDER%/wmp/bgee/links.tbl~
-		path_to_trans = EVAL ~%MOD_FOLDER%/language/autotra/%LANGUAGE%/worldmap.tra~
-	END
+// Angel: This was just the same code repeated three times for EET/BGEE/BGT.  Consolidated into one block, using variables.
+
+INCLUDE ~%MOD_FOLDER%/lib/add_worldmap_tbl.tpa~
+LAF ADD_WORLDMAP_TBL
+	INT_VAR
+	verbose = 1
+	inclSv = 0
+	STR_VAR
+	path_to_areas = ~%workspace%/%platform%_areas.tbl~
+	path_to_areas_bp = ~%MOD_FOLDER%/wmp/areas.tbl~
+	path_to_links = ~%MOD_FOLDER%/wmp/%platform%/links.tbl~
+	path_to_trans = ~%tra_loc%/%LANGUAGE%/worldmap.tra~
 END
-
-ACTION_IF GAME_IS ~eet~ BEGIN
-	INCLUDE ~%MOD_FOLDER%/lib/add_worldmap_tbl.tpa~
-	LAF ADD_WORLDMAP_TBL
-		INT_VAR
-		verbose = 1
-		inclSv = 0
-		STR_VAR
-		path_to_areas = EVAL ~%MOD_FOLDER%/wmp/%platform%/eet_areas.tbl~
-		path_to_areas_bp = EVAL ~%MOD_FOLDER%/wmp/areas.tbl~
-		path_to_links = EVAL ~%MOD_FOLDER%/wmp/%platform%/links.tbl~
-		path_to_trans = EVAL ~%MOD_FOLDER%/language/autotra/%LANGUAGE%/worldmap.tra~
-	END
-END
-
-ACTION_IF GAME_IS ~bgt~ BEGIN
-	INCLUDE ~%MOD_FOLDER%/lib/add_worldmap_tbl.tpa~
-	LAF ADD_WORLDMAP_TBL
-		INT_VAR
-		verbose = 1
-		inclSv = 0
-		STR_VAR
-		path_to_areas = EVAL ~%MOD_FOLDER%/wmp/%platform%/bgt_areas.tbl~
-		path_to_areas_bp = EVAL ~%MOD_FOLDER%/wmp/areas.tbl~
-		path_to_links = EVAL ~%MOD_FOLDER%/wmp/%platform%/links.tbl~
-		path_to_trans = EVAL ~%MOD_FOLDER%/language/autotra/%LANGUAGE%/worldmap.tra~
-	END
-END
-
-
 
 
 //##################################################
@@ -2512,8 +2387,8 @@ END
 INCLUDE ~%MOD_FOLDER%/lib/alter_searchmap.tpa~
     LAF ALTER_SEARCHMAP
         STR_VAR
-        path_to_2da_file = EVAL ~%MOD_FOLDER%/tpa/AR1200SR_changes.2da~ // full path to the *changes.2da file, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
-        areaname = EVAL ~%BaldursGateDocks%~                             // area name, e.g. ~AR3700~
+        path_to_2da_file = ~%MOD_FOLDER%/tpa/AR1200SR_changes.2da~ // full path to the *changes.2da file, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
+        areaname = ~%BaldursGateDocks%~                             // area name, e.g. ~AR3700~
     END
 
 

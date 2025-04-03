@@ -303,15 +303,15 @@ DEFINE_PATCH_MACRO add_worldmap_macro BEGIN
 			default_entry = def_entry
 			encounter_probability = enc_prob
 			STR_VAR
-			from_area = EVAL ~%src_area%~
-			from_node = EVAL ~%src_nwse%~
-			to_area = EVAL ~%target_are%~
-			entry = EVAL ~%entry_name%~
-			random_area1 = EVAL ~%enc1%~
-			random_area2 = EVAL ~%enc2%~
-			random_area3 = EVAL ~%enc3%~
-			random_area4 = EVAL ~%enc4%~
-			random_area5 = EVAL ~%enc5%~
+			from_area = ~%src_area%~
+			from_node = ~%src_nwse%~
+			to_area = ~%target_are%~
+			entry = ~%entry_name%~
+			random_area1 = ~%enc1%~
+			random_area2 = ~%enc2%~
+			random_area3 = ~%enc3%~
+			random_area4 = ~%enc4%~
+			random_area5 = ~%enc5%~
 		END
 		PATCH_IF save_patching = 0 BEGIN
 			SET links_added = links_added + 1

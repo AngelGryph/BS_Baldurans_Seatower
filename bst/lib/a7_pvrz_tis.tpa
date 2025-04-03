@@ -18,10 +18,10 @@ Examples
 ~~~~~~~~
 
 Example 1: Installing the file "mypic.bam" and associated mos0000.pvrz, mos0001.pvrz, mos0002.pvrz
-           located in the folder "mymod/bam".
+           located in the folder "%MOD_FOLDER%/bam".
 
 // Installing BAM resource
-COPY ~mymod/bam/mypic.bam~ ~override~
+COPY ~%MOD_FOLDER%/bam/mypic.bam~ ~override~
   LPF UPDATE_PVRZ_INDICES
     RET
       original_base_index
@@ -37,7 +37,7 @@ ACTION_IF (new_base_index >= 0) BEGIN
         original_base_index
         new_base_index
       STR_VAR
-        source_file = EVAL ~mymod/bam/%file%~
+        source_file = ~%MOD_FOLDER%/bam/%file%~
       RET
         success
         DEST_FILE
@@ -60,7 +60,7 @@ Example 2: Installing the files "mypic1.mos" and "mypic2.mos" which share a sing
            "mypic2.mos" references mos0002.pvrz and mos0003.pvrz.
 
 // Installing MOS resource 1
-COPY ~mymod/mos/mypic1.mos~ ~override~
+COPY ~%MOD_FOLDER%/mos/mypic1.mos~ ~override~
   LPF UPDATE_PVRZ_INDICES
     RET
       original_base_index
@@ -75,7 +75,7 @@ ACTION_IF (new_base_index >= 0) BEGIN
         original_base_index
         new_base_index
       STR_VAR
-        source_file = EVAL ~mymod/mos/%file%~
+        source_file = ~%MOD_FOLDER%/mos/%file%~
       RET
         success
     END
@@ -86,7 +86,7 @@ ACTION_IF (new_base_index >= 0) BEGIN
 END
 
 // Installing MOS resource 2
-COPY ~mymod/mos/mypic2.mos~ ~override~
+COPY ~%MOD_FOLDER%/mos/mypic2.mos~ ~override~
   LPF UPDATE_PVRZ_INDICES
     RET
       original_base_index
@@ -101,7 +101,7 @@ ACTION_IF (new_base_index >= 0) BEGIN
         original_base_index
         new_base_index
       STR_VAR
-        source_file = EVAL ~mymod/mos/%file%~
+        source_file = ~%MOD_FOLDER%/mos/%file%~
       RET
         success
     END
@@ -130,7 +130,7 @@ DEFINE_PATCH_FUNCTION TIS_RES_TO_PVRZ
 BEGIN
   // Make sure only filename without extension is specified
   PATCH_IF (~%tis_res%~ STRING_CONTAINS_REGEXP ~\.TIS$~ = 0) BEGIN
-    LPF RES_OF_FILESPEC STR_VAR filespec = EVAL ~%tis_res%~ RET tis_res = res END
+    LPF RES_OF_FILESPEC STR_VAR filespec = ~%tis_res%~ RET tis_res = res END
   END
 
   PATCH_IF (STRING_LENGTH ~%tis_res%~ > 1) BEGIN
@@ -211,7 +211,7 @@ BEGIN
           PATCH_IF (DIRECTORY_EXISTS ~%DEST_FILESPEC%~) BEGIN
             TEXT_SPRINT tis_res ~%SOURCE_RES%~
           END ELSE BEGIN
-            LPF RES_OF_FILESPEC STR_VAR filespec = EVAL ~%DEST_FILESPEC%~ RET tis_res = res END
+            LPF RES_OF_FILESPEC STR_VAR filespec = ~%DEST_FILESPEC%~ RET tis_res = res END
           END
           // ...to derive pvrz prefix
           LPF TIS_RES_TO_PVRZ STR_VAR tis_res RET prefix END
@@ -310,12 +310,12 @@ BEGIN
       // Making sure that target points to a directory
       ACTION_IF (~%target_folder%~ STR_EQ ~~) BEGIN OUTER_TEXT_SPRINT target_folder ~.~ END
       ACTION_IF (DIRECTORY_EXISTS ~%target_folder%~) BEGIN
-        LAF EXT_OF_FILESPEC STR_VAR filespec = EVAL ~%source_file%~ RET ext END
-        LAF RES_OF_FILESPEC STR_VAR filespec = EVAL ~%source_file%~ RET res END
+        LAF EXT_OF_FILESPEC STR_VAR filespec = ~%source_file%~ RET ext END
+        LAF RES_OF_FILESPEC STR_VAR filespec = ~%source_file%~ RET res END
       END ELSE BEGIN
-        LAF EXT_OF_FILESPEC STR_VAR filespec = EVAL ~%target_folder%~ RET ext END
-        LAF RES_OF_FILESPEC STR_VAR filespec = EVAL ~%target_folder%~ RET res END
-        LAF DIRECTORY_OF_FILESPEC STR_VAR filespec = EVAL ~%target_folder%~ RET target_folder = directory END
+        LAF EXT_OF_FILESPEC STR_VAR filespec = ~%target_folder%~ RET ext END
+        LAF RES_OF_FILESPEC STR_VAR filespec = ~%target_folder%~ RET res END
+        LAF DIRECTORY_OF_FILESPEC STR_VAR filespec = ~%target_folder%~ RET target_folder = directory END
       END
 
       // initializations

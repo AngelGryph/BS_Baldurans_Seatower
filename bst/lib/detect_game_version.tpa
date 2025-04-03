@@ -1,0 +1,57 @@
+/* check for a ready SoD (doesn't work on Windows...) */
+
+ACTION_IF ((FILE_EXISTS ~dlc/sod-dlc.zip~) OR (FILE_EXISTS ~sod-dlc.zip~)) THEN BEGIN
+  FAIL ~You need to prepare your SoD game before installing mods. Check the readme for more information and a link to download Modmerge or the DLC Merger.~
+END
+
+OUTER_SET enhanced_edition = 0 
+ ACTION_IF GAME_IS ~tutu_totsc~ THEN BEGIN
+  PRINT ~Baldur's Gate Tutu detected~
+  INCLUDE ~bst/lib/g3_tutu_cpmvars.tpa~
+ END
+
+ ACTION_IF GAME_IS ~bgt~ THEN BEGIN
+  PRINT ~Baldur's Gate Trilogy detected~
+  INCLUDE ~bst/lib/g3_bgt_cpmvars.tpa~ 
+  OUTER_SPRINT ~PLAYER1_NO_BLACKGUARD~ ~~
+  OUTER_SPRINT ~PLAYER2_NO_BLACKGUARD~ ~~
+  OUTER_SPRINT ~PLAYER3_NO_BLACKGUARD~ ~~
+  OUTER_SPRINT ~PLAYER4_NO_BLACKGUARD~ ~~
+  OUTER_SPRINT ~PLAYER5_NO_BLACKGUARD~ ~~
+  OUTER_SPRINT ~PLAYER6_NO_BLACKGUARD~ ~~
+  OUTER_SPRINT ~PLAYER1_BLACKGUARD~ ~~
+  OUTER_SPRINT SPIN996 ~BGIN996~ //TANARI_DEATH_GAZE
+  OUTER_SPRINT ~platform~ ~bgt~
+ END
+
+ ACTION_IF GAME_IS ~bgee~ THEN BEGIN
+  OUTER_SET enhanced_edition = 1 
+  /* Tell the player it is using bgee */
+  PRINT ~BG:EE detected...~ 
+  INCLUDE ~bst/lib/g3_bgee_cpmvars.tpa~
+  OUTER_SPRINT ~PLAYER1_NO_BLACKGUARD~ ~!Kit(Player1,Blackguard)~
+  OUTER_SPRINT ~PLAYER2_NO_BLACKGUARD~ ~!Kit(Player2,Blackguard)~
+  OUTER_SPRINT ~PLAYER3_NO_BLACKGUARD~ ~!Kit(Player3,Blackguard)~
+  OUTER_SPRINT ~PLAYER4_NO_BLACKGUARD~ ~!Kit(Player4,Blackguard)~
+  OUTER_SPRINT ~PLAYER5_NO_BLACKGUARD~ ~!Kit(Player5,Blackguard)~
+  OUTER_SPRINT ~PLAYER6_NO_BLACKGUARD~ ~!Kit(Player6,Blackguard)~
+  OUTER_SPRINT ~PLAYER1_BLACKGUARD~ ~Kit(Player1,Blackguard)~
+  OUTER_SPRINT SPIN996 ~SPIN996~ //TANARI_DEATH_GAZE
+  OUTER_SPRINT ~platform~ ~bgee~
+ END
+
+ ACTION_IF GAME_IS ~eet~ THEN BEGIN
+  OUTER_SET enhanced_edition = 1 
+  /* Tell the player it is using eet */
+  PRINT ~EET detected.~
+  INCLUDE ~EET/other/cpmvars/eet_cpmvars.tpa~
+  OUTER_SPRINT ~PLAYER1_NO_BLACKGUARD~ ~!Kit(Player1,Blackguard)~
+  OUTER_SPRINT ~PLAYER2_NO_BLACKGUARD~ ~!Kit(Player2,Blackguard)~
+  OUTER_SPRINT ~PLAYER3_NO_BLACKGUARD~ ~!Kit(Player3,Blackguard)~
+  OUTER_SPRINT ~PLAYER4_NO_BLACKGUARD~ ~!Kit(Player4,Blackguard)~
+  OUTER_SPRINT ~PLAYER5_NO_BLACKGUARD~ ~!Kit(Player5,Blackguard)~
+  OUTER_SPRINT ~PLAYER6_NO_BLACKGUARD~ ~!Kit(Player6,Blackguard)~
+  OUTER_SPRINT ~PLAYER1_BLACKGUARD~ ~Kit(Player1,Blackguard)~
+  OUTER_SPRINT SPIN996 ~SPIN996~ //TANARI_DEATH_GAZE
+  OUTER_SPRINT ~platform~ ~eet~
+ END
